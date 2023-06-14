@@ -57,7 +57,9 @@ class Rerank(ModuleBase):
             model_path: str
                 Path to caikit model.
         """
-        return cls(model_path)
+        reranker = ColBERTReranker(model=model_path)
+        model = reranker.load()
+        return cls(model)
 
     def run(self, queries: List[str],
                     documents:  List[List[Dict]], *args, **kwargs) -> DocumentRerankPrediction:
@@ -69,9 +71,7 @@ class Rerank(ModuleBase):
             DocumentRerankPrediction
         """
         # This is the main function used for inferencing.
-        reranker = ColBERTReranker(model=self.model)
-        reranker.load()
-        return self.predict([queries], documents=[documents],max_num_documents=2)
+        return self.model.predict([queries], documents=[documents],max_num_documents=2)
 
     def save(self, model_path, *args, **kwargs):
         """Function to save model in caikit format.
