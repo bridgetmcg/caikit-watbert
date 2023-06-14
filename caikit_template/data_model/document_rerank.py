@@ -20,8 +20,34 @@ from caikit.core import (
 from typing import List, Dict
 
 
+documents = [{'document': {'text': 'A man is eating food.', 'title': 'A', 'docid': '0'}, 'score': 0},
+             {'document': {'text': 'Someone in a gorilla costume is playing a set of drums.', 'title': 'in', 'docid': '1'}, 'score': 1},
+             {'document': {'text': 'A monkey is playing drums.', 'title': 'is', 'docid': '2'}, 'score': 2},
+             {'document': {'text': 'A man is riding a white horse on an enclosed ground.', 'title': 'riding', 'docid': '3'}, 'score': 3},
+             {'document': {'text': 'Two men pushed carts through the woods.', 'title': 'through', 'docid': '4'}, 'score': 4}]
+
+@dataobject()
+class SentenceRerankDocument(DataObjectBase):
+    """An input document"""
+
+    document: Dict[str, str]
+    score: int
+
+@dataobject()
+class SentenceRerankDocuments(DataObjectBase):
+    """The input documents"""
+
+    documents: List[SentenceRerankDocument]
+
+@dataobject()
+class SentenceRerankPrediction(DataObjectBase):
+    """The result of a similarity scores prediction."""
+
+    sentence: str
+    result: List[str]
+
 @dataobject()
 class DocumentRerankPrediction(DataObjectBase):
     """The result of a similarity scores prediction."""
 
-    texts: List[List[Dict]]
+    results: List[SentenceRerankPrediction]

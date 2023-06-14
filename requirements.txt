@@ -1,2 +1,2 @@
-caikit==0.7.0
+caikit==0.8.0
 primeqa

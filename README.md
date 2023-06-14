@@ -1,27 +1,82 @@
-# Caikit Template
+# Caikit WatBERT
 
-GitHub Template with a boilerplate repository which serves an example AI model using [caikit](https://github.com/caikit/caikit).
+Caikit runtime repository which serves a WatBERT AI model using [caikit](https://github.com/caikit/caikit).
 
-## Before Starting
+## Run locally
 
 The following tools are required:
 
+- [git](https://git-scm.com/)
 - [python](https://www.python.org) (v3.8+)
 - [pip](https://pypi.org/project/pip/) (v23.0+)
 
 **Note:** Before installing dependencies and to avoid conflicts in your environment, it is advisable to use a virtual environment. The subsection which follows provides an example of a virtual environment, python venv.
 
-Install the dependencies: `pip install -r requirements.txt`
-
-### (Optional) Setting Up Virtual Environment using Python venv
-
-For [(venv)](https://docs.python.org/3/library/venv.html)], make sure you are in an activated `venv` when running `python` in the example commands that follow. Use `deactivate` if you want to exit the `venv`.
-
-For example, to create and activate a virtual environment using `venv`:
+Step 1: Clone the project and navigate to the project folder
 
 ```shell
-python3 -m venv venv
+git clone https://github.com/bridgetmcg/caikit-watbert.git
+cd caikit-watbert
+```
+
+Step 2: Set a virtual environment (optional)
+
+```shell
+python -m venv venv
+```
+
+Step 3: Activate the virtual environment
+
+```shell
 source venv/bin/activate
+```
+
+Step 4: Install the needed modules and libraries
+
+```shell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+## Starting the Caikit Runtime
+
+In one terminal, start the runtime server:
+
+```shell
+cd demo/server
+python start_runtime.py
+```
+
+You should see output similar to the following:
+
+```ShellSession
+$ python start_runtime.py
+
+[ ... ]
+{"channel": "MODEL-LOADER", "exception": null, "level": "info", "log_code": "<RUN89711114I>", "message": "Loading model 'watbert'", "num_indent": 0, "thread_id": 140704708310592, "timestamp": "2023-06-14T15:50:55.104085"}
+[ ... ]
+{"channel": "GRPC-SERVR", "exception": null, "level": "info", "log_code": "<RUN10001001I>", "message": "Caikit Runtime is serving on port: 8085 with thread pool size: 5", "num_indent": 0, "thread_id": 140704708310592, "timestamp": "2023-06-14T15:50:55.222336"}
+
+```
+
+## Inferencing with the served model
+
+In another terminal, run the client code to infer the model:
+
+```shell
+source venv/bin/activate
+cd demo/client
+python infer_model.py
+```
+
+The client code calls the model and queries for generated text using text passed from the client.
+
+You should see output similar to the following after the word `World` is passed:
+
+```ShellSession
+$ python infer_model.py
+
+RESPONSE: greeting: "Hello World"
 ```
 
 ## Repository Layout
@@ -53,83 +108,3 @@ source venv/bin/activate
 └── └── requirements.txt:                   specifies library dependencies
 ```
 
-## Starting the Caikit Runtime
-
-In one terminal, start the runtime server:
-
-```shell
-cd client
-python3 start_runtime.py
-```
-
-You should see output similar to the following:
-
-```ShellSession
-$ python3 start_runtime.py
-
-[...]
-{"channel": "MODEL-LOADER", "exception": null, "level": "info", "log_code": "<RUN89713784I>", "message": "Singleton cache: '{}'", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.833744"}
-{"channel": "MODEL-SIZER", "exception": null, "level": "info", "log_code": "<RUN62161564I>", "message": "No configured model size multiplier found for model type 'standalone-model' for model 'hello_world'. Using default multiplier '10.000000'", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.834439"}
-{"channel": "GP-SERVICR-I", "exception": null, "level": "info", "log_code": "<RUN76773776I>", "message": "Metering is disabled, to enable set `metering.enabled` in config to true", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.834766"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit_template", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.834905"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.common", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.834977"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.runtime", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.835026"}
-{"channel": "GP-SERVICR-I", "exception": null, "level": "info", "log_code": "<RUN76773778I>", "message": "Validated Caikit Library CDM successfully", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.835119"}
-{"channel": "GP-SERVICR-I", "exception": null, "level": "info", "log_code": "<RUN76884779I>", "message": "Constructed inference service for library: caikit_template, version: unknown", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836444"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN81194024I>", "message": "Intercepting RPC method /caikit.runtime.Template.TemplateService/HelloWorldTaskPredict", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836523"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN33333123I>", "message": "Wrapping safe rpc for Predict", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836663"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN30032825I>", "message": "Re-routing RPC /caikit.runtime.Template.TemplateService/HelloWorldTaskPredict from <function _ServiceBuilder._GenerateNonImplementedMethod.<locals>.<lambda> at 0x7fa470fdb550> to <function CaikitRuntimeServerWrapper.safe_rpc_wrapper.<locals>.safe_rpc_call at 0x7fa470ff55e0>", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836722"}
-[...]
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN24924908I>", "message": "Interception of service caikit.runtime.Template.TemplateService complete", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836783"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit_template", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.836977"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.common", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837052"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.runtime", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837114"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit_template", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837267"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.common", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837320"}
-{"channel": "COM-LIB-INIT", "exception": null, "level": "info", "log_code": "<RUN11997772I>", "message": "Loading service module: caikit.interfaces.runtime", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837373"}
-{"channel": "GT-SERVICR-I", "exception": null, "level": "info", "log_code": "<RUN76773777I>", "message": "Validated Caikit Library CDM successfully", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.837458"}
-{"channel": "GT-SERVICR-I", "exception": null, "level": "info", "log_code": "<RUN76884779I>", "message": "Constructed train service for library: caikit_template, version: unknown", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.838420"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN81194024I>", "message": "Intercepting RPC method /caikit.runtime.Template.TemplateTrainingService/HelloWorldTaskHelloWorldModuleTrain", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.838478"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN33333123I>", "message": "Wrapping safe rpc for Train", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.838572"}
-{"channel": "SERVER-WRAPR", "exception": null, "level": "info", "log_code": "<RUN30032825I>", "message": "Re-routing RPC /caikit.runtime.Template.TemplateTrainingService/HelloWorldTaskHelloWorldModuleTrain from <function _ServiceBuilder._GenerateNonImplementedMethod.<locals>.<lambda> at 0x7fa470ff53a0> to <function CaikitRuntimeServerWrapper.safe_rpc_wrapper.<locals>.safe_rpc_call at 0x7fa4602adaf0>", "num_indent": 0, "thread_id": 8604329472, "timestamp": "2023-06-09T11:22:12.838619"}
-```
-
-## Inferencing the Served Model
-
-In another terminal, run the client code to infer the model:
-
-```shell
-cd client
-python3 infer_model.py
-```
-
-The client code calls the model and queries for generated text using text passed from the client.
-
-You should see output similar to the following after the word `World` is passed:
-
-```ShellSession
-$ python3 infer_model.py
-
-RESPONSE: greeting: "Hello World"
-```
-
-## Training the Served Model
-
-In another terminal, run the client code to train the model:
-
-```shell
-cd client
-python3 train_model.py
-```
-
-The client code trains the model with sample data in `train_data/` and outputs the
-trained model to `training_output/` by default.
-
-You should see output similar to the following:
-
-```ShellSession
-$ python3 train_model.py
-
-RESPONSE: training_id: "ace2fd4c-0a50-49ef-b4db-9d9bbe2eefaf"
-model_name: "hello_world"
-```

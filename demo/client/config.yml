@@ -16,6 +16,9 @@
 # Caikit model configuration
 # Relative paths are relative to where the config is loaded
 runtime:
+    # Package name containing the model wrapping
+    library: caikit_template
+
     # All models in this directory are loaded at boot time
     local_models_dir: "../models"
 
