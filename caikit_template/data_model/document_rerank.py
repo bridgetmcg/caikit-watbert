@@ -17,23 +17,11 @@ from caikit.core import (
     DataObjectBase,
 )
 
+from typing import List, Dict
 
-@dataobject(package="caikit_template.data_model")
-class HelloWorldInput(DataObjectBase):
-    """An example `domain primitive` input type for this library.
-    This is analogous to a `Raw Document` for the `Natural Language Processing` domain."""
 
-    name: str
+@dataobject()
+class DocumentRerankPrediction(DataObjectBase):
+    """The result of a similarity scores prediction."""
 
-@dataobject(package="caikit_template.data_model")
-class HelloWorldTrainingType(DataObjectBase):
-    """An example `training data` type for the `example_task` task."""
-
-    text: str
-    label: str
-
-@dataobject(package="caikit_template.data_model")   
-class HelloWorldPrediction(DataObjectBase):
-    """A simple return type for the `example_task` task"""
-
-    greeting: str
+    texts: List[List[Dict]]

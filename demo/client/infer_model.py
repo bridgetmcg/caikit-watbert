@@ -28,8 +28,6 @@ sys.path.append(
     path.abspath(path.join(path.dirname(__file__), "../../"))
 )
 
-from caikit_template.data_model.hello_world import HelloWorldInput
-
 # Load configuration for Caikit runtime
 CONFIG_PATH = path.realpath(
     path.join(path.dirname(__file__), "config.yml")
@@ -38,22 +36,30 @@ caikit.configure(CONFIG_PATH)
 
 # NOTE: The model id needs to be a path to folder.
 # NOTE: This is relative path to the models directory
-MODEL_ID = "hello_world"
+MODEL_ID = "watbert"
 
 inference_service = ServicePackageFactory().get_service_package(
     ServicePackageFactory.ServiceType.INFERENCE,
 )
+
+query = "what is the color of the horse?"
+
+documents = [{'document': {'text': 'A man is eating food.', 'title': 'A', 'docid': '0'}, 'score': 0}, 
+    {'document': {'text': 'Someone in a gorilla costume is playing a set of drums.', 'title': 'in', 'docid': '1'}, 'score': 1}, 
+    {'document': {'text': 'A monkey is playing drums.', 'title': 'is', 'docid': '2'}, 'score': 2}, 
+    {'document': {'text': 'A man is riding a white horse on an enclosed ground.', 'title': 'riding', 'docid': '3'}, 'score': 3}, 
+    {'document': {'text': 'Two men pushed carts through the woods.', 'title': 'through', 'docid': '4'}, 'score': 4}]
+
 
 port = 8085
 channel = grpc.insecure_channel(f"localhost:{port}")
 client_stub = inference_service.stub_class(channel)
 
 ## Create request object
-hello_world_proto = HelloWorldInput(name="World").to_proto()
-request = inference_service.messages.HelloWorldTaskRequest(text_input=hello_world_proto)
+request = inference_service.messages.RerankTaskRequest(queries=query, documents=documents)
 
 ## Fetch predictions from server (infer)
-response = client_stub.HelloWorldTaskPredict(
+response = client_stub.RerankTaskPredict(
     request, metadata=[("mm-model-id", MODEL_ID)]
 )
 

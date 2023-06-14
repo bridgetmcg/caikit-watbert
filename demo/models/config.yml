@@ -13,5 +13,5 @@
 # limitations under the License.
 
 block_id: 00110203-0405-0607-0809-0a0b02dd0e0f
-name: HelloWorldModule
+name: RerankerModule
 version: 0.0.1
