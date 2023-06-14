@@ -16,7 +16,7 @@ import alog
 from caikit.core import ModuleBase, ModuleLoader, ModuleSaver, TaskBase, module, task
 from caikit.core.data_model import DataStream
 from caikit.core.toolkit.errors import error_handler
-from caikit_template.data_model.document_rerank import (DocumentRerankPrediction)
+from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankDocuments, SentenceRerankDocument
 from primeqa.components.reranker.colbert_reranker import ColBERTReranker
 from typing import List, Dict
 import numpy as np
@@ -25,9 +25,12 @@ import os
 logger = alog.use_channel("<SMPL_BLK>")
 error = error_handler.get(logger)
 
+
 @task(
-    required_parameters={"queries": List[str],
-                    "documents":  List[List[Dict]]},
+    required_parameters={
+        "queries": List[str],
+        "documents": SentenceRerankDocuments,
+    },
     output_type=DocumentRerankPrediction,
 )
 class RerankTask(TaskBase):
@@ -61,8 +64,8 @@ class Rerank(ModuleBase):
         model = reranker.load()
         return cls(model)
 
-    def run(self, queries: List[str],
-                    documents:  List[List[Dict]], *args, **kwargs) -> DocumentRerankPrediction:
+    # def run(self, queries: List[str], documents: List[str]) -> DocumentRerankPrediction:
+    def run(self, queries: List[str], documents: SentenceRerankDocuments) -> DocumentRerankPrediction:
         """Run inference on model.
         Args:
             queries: List[str],
@@ -70,6 +73,9 @@ class Rerank(ModuleBase):
         Returns:
             DocumentRerankPrediction
         """
+
+        print(f"RUN: {queries=} {documents=}")
+
         # This is the main function used for inferencing.
         return self.model.predict([queries], documents=[documents],max_num_documents=2)
 
