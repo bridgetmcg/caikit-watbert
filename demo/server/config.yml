@@ -17,7 +17,7 @@
 # Relative paths are relative to where the config is loaded
 runtime:
     # All models in this directory are loaded at boot time
-    local_models_dir: "../models"
+    local_models_dir: "../models/watbert"
 
     # Training configuration
     training:
