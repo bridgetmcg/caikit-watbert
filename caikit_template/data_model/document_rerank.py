@@ -26,11 +26,19 @@ documents = [{'document': {'text': 'A man is eating food.', 'title': 'A', 'docid
              {'document': {'text': 'A man is riding a white horse on an enclosed ground.', 'title': 'riding', 'docid': '3'}, 'score': 3},
              {'document': {'text': 'Two men pushed carts through the woods.', 'title': 'through', 'docid': '4'}, 'score': 4}]
 
+# @dataobject()
+# class SentenceRerankDict(DataObjectBase):
+#     """An input document"""
+
+#     text: str
+#     title: str
+#     docid: str
+
 @dataobject()
 class SentenceRerankDocument(DataObjectBase):
     """An input document"""
 
-    document: Dict[str, str]
+    document: Dict[str,str]
     score: int
 
 @dataobject()
@@ -38,6 +46,12 @@ class SentenceRerankDocuments(DataObjectBase):
     """The input documents"""
 
     documents: List[SentenceRerankDocument]
+
+@dataobject()
+class SentenceRerankDocumentsList(DataObjectBase):
+    """The input documents"""
+
+    documents: List[SentenceRerankDocuments]
 
 @dataobject()
 class SentenceRerankPrediction(DataObjectBase):

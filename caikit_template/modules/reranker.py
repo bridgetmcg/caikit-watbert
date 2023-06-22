@@ -16,9 +16,11 @@ import alog
 from caikit.core import ModuleBase, ModuleConfig, ModuleSaver, TaskBase, module, task
 from caikit.core.data_model import DataStream
 from caikit.core.toolkit.errors import error_handler
-from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankDocuments, SentenceRerankDocument
+from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankDocumentsList, SentenceRerankDocuments, SentenceRerankDocument
 from caikit_template.toolkit.colbert.infra.config import ColBERTConfig
 from caikit_template.toolkit.colbert.searcher import Searcher
+# from colbert.searcher import Searcher
+# from colbert.infra.config import ColBERTConfig
 
 import numpy as np
 from typing import List, Dict, Union
@@ -35,7 +37,7 @@ error = error_handler.get(logger)
 @task(
     required_parameters={
         "queries": List[str],
-        "documents": SentenceRerankDocuments,
+        "documents": SentenceRerankDocumentsList,
     },
     output_type=DocumentRerankPrediction,
 )
@@ -53,10 +55,10 @@ class Rerank(ModuleBase):
     def __init__(
         self, 
         model,
-        tokenizer,
-        max_num_documents=180,
+        doc_maxlen=180,
         query_maxlen=32,
-        include_title=False
+        include_title=False, 
+        max_num_documents=3
     ) -> None:
         """Function to initialize the Reranker.
         This function gets called by `.load` and `.train` function
@@ -65,10 +67,10 @@ class Rerank(ModuleBase):
 
         super().__init__()
         self.model = model
-        self._tokenzier = tokenizer
-        self.max_num_documents = max_num_documents
+        self.doc_maxlen = doc_maxlen
         self.query_maxlen = query_maxlen
         self.include_title = include_title
+        self.max_num_documents = max_num_documents
 
     @classmethod
     def load(cls, model_path: str):
@@ -83,11 +85,7 @@ class Rerank(ModuleBase):
             return cls.bootstrap(model_path)
         else:
             config = ModuleConfig.load(model_path)
-            artifact = os.path.join(model_path, config.artifact)
-            if not os.path.isdir(artifact):
-                return cls.bootstrap(config.artifact)
-            else:
-                return cls.bootstrap(artifact)
+            return cls.bootstrap(model_path)
 
 
     @classmethod
@@ -102,13 +100,13 @@ class Rerank(ModuleBase):
             index_root=None,
             index_name=None,
             index_path=None,
-            doc_maxlen=cls.doc_maxlen,
-            query_maxlen = cls.query_maxlen
+            doc_maxlen=180,
+            query_maxlen = 32
         )
 
         model = Searcher(
             None,
-            checkpoint=pretrained_model_name_or_path,
+            checkpoint=pretrained_model_name_or_path + "/watbert.dnn.model",
             collection=None,
             config=config,
             rescore_only=True
@@ -116,11 +114,11 @@ class Rerank(ModuleBase):
         return cls(model)
 
     # def run(self, queries: List[str], documents: List[str]) -> DocumentRerankPrediction:
-    def run(self, queries: List[str], documents: SentenceRerankDocuments, *args, **kwargs) -> DocumentRerankPrediction:
+    def run(self, queries: List[str], documents: SentenceRerankDocumentsList, *args, **kwargs) -> DocumentRerankPrediction:
         """Run inference on model.
         Args:
             queries: List[str]
-            documents:  SentenceRerankDocuments
+            documents:  SentenceRerankDocumentsList
             max_num_documents: int
                 Optional
             include_title: boolean 
@@ -144,9 +142,9 @@ class Rerank(ModuleBase):
         )
 
         ranking_results = []
-        for query, docs in zip(queries, documents):
+        for query, docs in zip(queries, documents.documents):
             texts = []
-            for p in docs:
+            for p in docs.documents:
                 if include_title and 'title' in p['document'] and p['document']['title'] is not None and len(p['document']['title'].strip()) > 0:
                     texts.append(p['document']['title'] + '\n\n' + p['document']['text'])
                 else:
