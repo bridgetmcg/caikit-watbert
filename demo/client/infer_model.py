@@ -42,7 +42,7 @@ configure(CONFIG_PATH)
 
 # NOTE: The model id needs to be a path to folder.
 # NOTE: This is relative path to the models directory
-MODEL_ID = "watbert"
+MODEL_ID = "wat"
 
 inference_service = ServicePackageFactory().get_service_package(
     ServicePackageFactory.ServiceType.INFERENCE,
@@ -78,14 +78,16 @@ request_name = f"{service_prefix}.RerankTaskRequest"
 request_desc = desc_pool.FindMessageTypeByName(request_name)
 srds_desc = desc_pool.FindMessageTypeByName("caikit_data_model.SentenceRerankDocuments")
 srd_desc = desc_pool.FindMessageTypeByName("caikit_data_model.SentenceRerankDocument")
+srdl_desc = desc_pool.FindMessageTypeByName("caikit_data_model.SentenceRerankDocumentsList")
 request = MessageFactory(desc_pool).GetPrototype(request_desc)
 sentenceRerankDocuments = MessageFactory(desc_pool).GetPrototype(srds_desc)
 sentenceRerankDocument = MessageFactory(desc_pool).GetPrototype(srd_desc)
-srds = sentenceRerankDocuments(documents=[sentenceRerankDocument(document=x["document"], score=x["score"]) for x in documents])
+sentenceRerankDocumentsList = MessageFactory(desc_pool).GetPrototype(srdl_desc)
 
+srds = sentenceRerankDocuments(documents=[sentenceRerankDocument(document=x["document"], score=x["score"]) for x in documents])
+srdl = sentenceRerankDocumentsList(documents=[srds])
 ## Fetch predictions from server (infer)
-response = client_stub.RerankTaskPredict(request=request(queries=queries, documents=srds), metadata=[("mm-model-id", MODEL_ID)]
-)
+response = client_stub.RerankTaskPredict(request(queries=queries, documents=srdl), metadata=[("mm-model-id", MODEL_ID)])
 
 ## Print response
 print("RESPONSE:", response)

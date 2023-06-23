@@ -27,7 +27,7 @@ sys.path.append(
     path.abspath(path.join(path.dirname(__file__), "../../"))
 )
 
-from caikit_template.data_model.hello_world import HelloWorldInput
+from caikit_template.data_model.document_rerank import HelloWorldInput
 
 # Load configuration for Caikit runtime
 CONFIG_PATH = path.realpath(

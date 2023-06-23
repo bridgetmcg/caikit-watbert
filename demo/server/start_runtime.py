@@ -21,9 +21,11 @@ import alog
 
 # Since the `caikit_template` package is not installed and it is not present in path,
 # we are adding it directly
+# runtime library config
 sys.path.append(
     path.abspath(path.join(path.dirname(__file__), "../../"))
 )
+
 
 # Local
 import caikit_template
@@ -32,7 +34,7 @@ from caikit.runtime import grpc_server
 
 # Load configuration for model(s) serving
 CONFIG_PATH = path.realpath(
-    path.join(path.dirname(__file__), "config.yml")
+    path.join(path.dirname(__file__), "..", "..", "caikit_template", "config", "config.yml")
 )
 caikit.configure(CONFIG_PATH)
 

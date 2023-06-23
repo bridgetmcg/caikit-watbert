@@ -27,11 +27,19 @@ documents = [{'document': {'text': 'A man is eating food.', 'title': 'A', 'docid
              {'document': {'text': 'Two men pushed carts through the woods.', 'title': 'through', 'docid': '4'}, 'score': 4}]
 
 @dataobject()
+class SentenceRerankDict(DataObjectBase):
+    """An input document"""
+
+    text: str
+    title: str
+    docid: str
+
+@dataobject()
 class SentenceRerankDocument(DataObjectBase):
     """An input document"""
 
-    document: Dict[str, str]
-    score: int
+    document: SentenceRerankDict
+    score: float
 
 @dataobject()
 class SentenceRerankDocuments(DataObjectBase):
@@ -40,11 +48,17 @@ class SentenceRerankDocuments(DataObjectBase):
     documents: List[SentenceRerankDocument]
 
 @dataobject()
+class SentenceRerankDocumentsList(DataObjectBase):
+    """The input documents"""
+
+    documents: List[SentenceRerankDocuments]
+
+@dataobject()
 class SentenceRerankPrediction(DataObjectBase):
     """The result of a similarity scores prediction."""
 
     sentence: str
-    result: List[str]
+    result: SentenceRerankDocumentsList
 
 @dataobject()
 class DocumentRerankPrediction(DataObjectBase):

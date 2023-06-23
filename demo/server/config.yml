@@ -18,7 +18,7 @@
 runtime:
     # All models in this directory are loaded at boot time
     local_models_dir: "../models"
-
+    library: caikit_template
     # Training configuration
     training:
         # The directory to save trained models in
