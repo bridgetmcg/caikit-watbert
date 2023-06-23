@@ -16,7 +16,7 @@ import alog
 from caikit.core import ModuleBase, ModuleConfig, ModuleSaver, TaskBase, module, task
 from caikit.core.data_model import DataStream
 from caikit.core.toolkit.errors import error_handler
-from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankDocumentsList, SentenceRerankDocuments, SentenceRerankDocument
+from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankPrediction, SentenceRerankDocumentsList, SentenceRerankDocuments, SentenceRerankDocument
 from caikit_template.toolkit.colbert.infra.config import ColBERTConfig
 from caikit_template.toolkit.colbert.searcher import Searcher
 # from colbert.searcher import Searcher
@@ -148,18 +148,19 @@ class Rerank(ModuleBase):
                 if include_title and 'title' in p['document'] and p['document']['title'] is not None and len(p['document']['title'].strip()) > 0:
                     texts.append(p['document']['title'] + '\n\n' + p['document']['text'])
                 else:
-                    texts.append(p['document']['text'])
+                    texts.append(p.document.text)
 
             scores = self.model.rescore(query, texts).tolist()
             ranked_passage_indexes = np.array(scores).argsort()[::-1][:max_num_documents if max_num_documents > 0 else len(scores)].tolist()
 
             results = []
             for idx in ranked_passage_indexes:
-                docs[idx]['score'] = scores[idx]
-                results.append(docs[idx])
-            ranking_results.append(results)
+                docs.documents[idx].score = scores[idx]
+                print(type(docs.documents[idx]))
+                results.append(docs.documents[idx])
+            ranking_results.append(SentenceRerankPrediction(query, SentenceRerankDocumentsList([SentenceRerankDocuments(results)])))  # TODO: Is sentence=query correct here?
 
-        return ranking_results
+        return DocumentRerankPrediction(results=ranking_results)
     
     # def encode(self, text: TextQueries):
     #     queries = text if isinstance(text, list) else [text]
