@@ -17,10 +17,8 @@ from caikit.core import ModuleBase, ModuleConfig, ModuleSaver, TaskBase, module,
 from caikit.core.data_model import DataStream
 from caikit.core.toolkit.errors import error_handler
 from caikit_template.data_model.document_rerank import DocumentRerankPrediction, SentenceRerankPrediction, SentenceRerankDocumentsList, SentenceRerankDocuments, SentenceRerankDocument
-from caikit_template.toolkit.colbert.infra.config import ColBERTConfig
-from caikit_template.toolkit.colbert.searcher import Searcher
-# from colbert.searcher import Searcher
-# from colbert.infra.config import ColBERTConfig
+from primeqa.ir.dense.colbert_top.colbert.infra.config import ColBERTConfig
+from primeqa.ir.dense.colbert_top.colbert.searcher import Searcher
 
 import numpy as np
 from typing import List, Dict, Union
@@ -28,11 +26,6 @@ import os
 
 logger = alog.use_channel("<SMPL_BLK>")
 error = error_handler.get(logger)
-
-#TextQueries = Union[str, List[str], Dict[int, str], Queries]
-# tokenizer = AutoTokenizer.from_pretrained("vespa-engine/colbert-medium")
-# model = ColBERT.from_pretrained("vespa-engine/colbert-medium")
-
 
 @task(
     required_parameters={
@@ -162,38 +155,3 @@ class Rerank(ModuleBase):
 
         return DocumentRerankPrediction(results=ranking_results)
     
-    # def encode(self, text: TextQueries):
-    #     queries = text if isinstance(text, list) else [text]
-    #     bsize = 128 if len(queries) > 128 else None
-
-    #     self.checkpoint.query_tokenizer.query_maxlen = self.config.query_maxlen
-    #     Q = self.checkpoint.queryFromText(queries, bsize=bsize, to_cpu=True)
-
-    #     return Q
-
-    # def save(self, model_path, *args, **kwargs):
-    #     """Function to save model in caikit format.
-    #     This will generate store models on disk in a folder, which would be directly
-    #     consumable by caikit.runtime framework.
-
-    #     Args:
-    #         model_path: str
-    #             Path to store model into
-    #     """
-    #     module_saver = ModuleSaver(
-    #         self,
-    #         model_path=model_path,
-    #     )
-    #     with module_saver:
-    #         rel_path, _ = module_saver.add_dir("watbert_model")
-    #         module_saver.update_config({"watbert_artifact_path": rel_path})
-
-    # @classmethod
-    # def bootstrap(cls, pretrained_model_path):
-    #     """Optional: Function that allows to load a non-caikit model artifact
-    #     such as open source models from TF hub or HF and load them into
-    #     this module.
-    #     """
-    #     # Replace following with model load code such as `transformers.from_pretrained`
-    #     model = None
-    #     return cls(model)
