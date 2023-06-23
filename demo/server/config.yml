@@ -17,8 +17,8 @@
 # Relative paths are relative to where the config is loaded
 runtime:
     # All models in this directory are loaded at boot time
-    local_models_dir: "../models/watbert"
-
+    local_models_dir: "../models"
+    library: caikit_template
     # Training configuration
     training:
         # The directory to save trained models in

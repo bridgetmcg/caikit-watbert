@@ -59,7 +59,7 @@ class BaseConfig(CoreConfig):
     
     @classmethod
     def load_from_checkpoint(cls, checkpoint_path):
-        print("here: " + checkpoint_path)
+
         if checkpoint_path.endswith('.dnn') or checkpoint_path.endswith('.model'):
             dnn = torch_load_dnn(checkpoint_path)
             config, _ = cls.from_deprecated_args(dnn.get('arguments', {}))
