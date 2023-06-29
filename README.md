@@ -38,6 +38,9 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+Step 5: Add model to the `demo\models\watbert` folder. The model is expected to be named `watbert.dnn.model` in this demo.
+
+
 ## Starting the Caikit Runtime
 
 In one terminal, start the runtime server:
@@ -76,35 +79,35 @@ You should see output similar to the following after the word `World` is passed:
 ```ShellSession
 $ python infer_model.py
 
-RESPONSE: greeting: "Hello World"
+RESPONSE: results {
+  sentence: "what is the color of the horse?"
+  result {
+    documents {
+      documents {
+        document {
+          text: "A man is riding a white horse on an enclosed ground."
+          title: "riding"
+          docid: "3"
+        }
+        score: 18.641214370727539
+      }
+      documents {
+        document {
+          text: "Someone in a gorilla costume is playing a set of drums."
+          title: "in"
+          docid: "1"
+        }
+        score: 10.520210266113281
+      }
+      documents {
+        document {
+          text: "A monkey is playing drums."
+          title: "is"
+          docid: "2"
+        }
+        score: 9.5272674560546875
+      }
+    }
+  }
+}
 ```
-
-## Repository Layout
-
-```text
-├── caikit-template/:                       top-level package directory (will change to your repo name after template is deployed)
-│   │── caikit_template/:                   a directory that defines Caikit module(s) that can include algorithm(s) implementation that can train/run an AI model 
-│   │   ├── config/:                        a directory that contains the configuration for the module and model input and output
-│   │   │   ├── config.yml:                 configuration for the module and model input and output
-│   │   ├── data_model/:                    a directory that contains the data format of the Caikit module
-│   │   │   ├── hello_world.py:             data class that represents the AI model attributes in code
-│   │   │   ├── __init__.py:                makes the hello_world class visible in the project
-│   │   ├── modules/:                       a directory that contains the Caikit module of the model
-│   │   │   ├── hello_world.py:             a class that bootstraps the AI model in Caikit so it can be served and used (infer/train)
-│   │   │   ├── __init__.py:                makes the hello_world class visible in the project
-|   |   |── __init__.py:                    makes the data_model and runtime_model packages visible
-│   │── demo/:                              a directory which contains code and configuration to test the model
-│   │   │── client/:                        a directory which contains artifacts to use (infer and train) the AI model spceified in the `caikit_template` package
-|   │   │   ├── config.yml:                 caikit runtime configuration file
-│   │   │   ├── infer_model.py:             sample client which calls the Caikit runtime to perform inference on a model it is serving
-│   │   │   ├── train_model.py:             sample client which calls the Caikit runtime to perform training on a model it is serving
-│   │   │── models/:                        a directory that contains the Caikit metadata of the models and any artifacts required to run the models (usually generated after saving and should not be modified)
-│   │   │   ├── hello_world/config.yml:     a metadata that defines the example Caikit model
-│   │   │── server/:                        a directory which contains artifacts to start Caikit runtime
-|   │   │   ├── config.yml:                 configuration for handling the model by the Caikit runtime
-│   │   │   ├── start_runtime.py:           a wrapper to start the Caikit runtime as a gRPC server. The runtime will load the model at startup
-|   │   ├── train_data/:                    a directory which contains the training data
-|   │   |   ├── sample_data.csv:            sample training dataset to perform training of the model
-└── └── requirements.txt:                   specifies library dependencies
-```
-
