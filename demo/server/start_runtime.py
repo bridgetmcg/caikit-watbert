@@ -34,7 +34,7 @@ from caikit.runtime import grpc_server
 
 # Load configuration for model(s) serving
 CONFIG_PATH = path.realpath(
-    path.join(path.dirname(__file__), "..", "..", "caikit_template", "config", "config.yml")
+    path.join(path.dirname(__file__), "config.yml")
 )
 caikit.configure(CONFIG_PATH)
 
