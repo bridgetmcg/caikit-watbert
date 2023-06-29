@@ -1,3 +1,2 @@
 caikit==0.8.0
-COLBERT @ git+https://github.com/stanford-futuredata/ColBERT.git@main
-Ninja
+primeqa
