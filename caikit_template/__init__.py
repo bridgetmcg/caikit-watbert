@@ -20,6 +20,6 @@ import caikit
 
 from . import data_model, modules
 
-# Give the path to the `config.yml`
-CONFIG_PATH = os.path.realpath(os.path.join(os.path.dirname(__file__), "config", "config.yml"))
-caikit.configure(CONFIG_PATH)
+# # Give the path to the `config.yml`
+# CONFIG_PATH = os.path.realpath(os.path.join(os.path.dirname(__file__), "config", "config.yml"))
+# caikit.configure(CONFIG_PATH)

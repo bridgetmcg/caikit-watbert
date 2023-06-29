@@ -42,7 +42,7 @@ configure(CONFIG_PATH)
 
 # NOTE: The model id needs to be a path to folder.
 # NOTE: This is relative path to the models directory
-MODEL_ID = "watbert"
+MODEL_ID = "wat"
 
 inference_service = ServicePackageFactory().get_service_package(
     ServicePackageFactory.ServiceType.INFERENCE,
