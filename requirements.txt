@@ -1,3 +1,8 @@
 caikit==0.8.0
-COLBERT @ git+https://github.com/stanford-futuredata/ColBERT.git@main
+torch
+ujson
+gitpython
+faiss-cpu
+transformers
 Ninja
+#COLBERT @ git+https://github.com/stanford-futuredata/ColBERT.git@main

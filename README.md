@@ -38,6 +38,9 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+Step 5: Add model to the `demo\models\watbert` folder. The model is expected to be named `watbert.dnn.model` in this demo.
+
+
 ## Starting the Caikit Runtime
 
 In one terminal, start the runtime server:
