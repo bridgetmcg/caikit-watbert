@@ -12,14 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Standard
-import os
-
-# Local
-import caikit
-
-from . import data_model, modules
-
-# Give the path to the `config.yml`
-CONFIG_PATH = os.path.realpath(os.path.join(os.path.dirname(__file__), "config", "config.yml"))
-caikit.configure(CONFIG_PATH)
+module_id: 00110203-0405-0607-0809-0a0b02dd0e0f
+name: RerankerModule
+version: 0.0.1
